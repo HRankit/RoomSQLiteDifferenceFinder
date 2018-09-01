@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="throbber.css" type="text/css" media="screen">
     <link rel="stylesheet" href="jdd.css" type="text/css" media="screen">
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="jsl/jsl.format.js" type="text/javascript" charset="utf-8"></script>
     <script src="jsl/jsl.parser.js" type="text/javascript" charset="utf-8"></script>
@@ -125,11 +125,11 @@
         return;
     }
     var res = replace(expected);
-    var count = 1;
+    var count = 0;
 
     if (IsJsonString(res)){
         document.getElementById("textarealeft").value = res;
-        count +=count;
+        count = count + 1;
     }else{
         document.getElementById("textarealeft").value = "Json Invalid\n Please paste from Expected TableInfo: till the ending curly braces of indices=[] }";
     }
@@ -139,12 +139,12 @@
 
     if (IsJsonString(res)){
         document.getElementById("textarearight").value = res;
-        count +=count;        
+        count = count + 1;        
     }else{
         document.getElementById("textarearight").value = "Json Invalid\nPlease paste from Expected TableInfo: till the ending curly braces of indices=[] }";
     }
 
-    if (count == 3){
+    if (count == 2){
         document.getElementById("processGo").classList.remove("shown");
         document.getElementById("processGo").classList.add("hidden");
 
