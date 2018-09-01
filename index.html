@@ -125,7 +125,7 @@
         return;
     }
     var res = replace(expected);
-    var count = 0;
+    var count = 1;
 
     if (IsJsonString(res)){
         document.getElementById("textarealeft").value = res;
@@ -144,7 +144,7 @@
         document.getElementById("textarearight").value = "Json Invalid\nPlease paste from Expected TableInfo: till the ending curly braces of indices=[] }";
     }
 
-    if (count == 2){
+    if (count == 3){
         document.getElementById("processGo").classList.remove("shown");
         document.getElementById("processGo").classList.add("hidden");
 
