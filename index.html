@@ -1,0 +1,148 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+    <title>JSON Diff - The semantic JSON compare tool</title> 
+
+    <link rel="stylesheet" href="reset.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="throbber.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="jdd.css" type="text/css" media="screen">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="jsl/jsl.format.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jsl/jsl.parser.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jdd.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+        .hidden{
+            display: none
+        }
+        .shown {
+            display: block;
+        }
+    </style>
+</head> 
+<body>
+
+    <div id="main">
+        <div class="header">
+            <h1>Room SQlite Difference Finder</h1>
+            <h3>Find difference when migrating from Sqlite to Room.</h3>
+
+            <div class="weak">
+                <p>
+                    When migrating from Sqlite to Room, it gets pretty difficult to find the changes. This script converts the output to json and Validate, format, and compare two JSON documents.  See the differences between the objects instead of just the new lines and mixed up properties.
+                </p>
+
+                <p>
+                    Created by <a href="https://github.com/hrankit">HRAnkit</a>.
+                </p>
+
+                <p>
+                   Big thanks owed to <a href="http://www.zackgrossbart.com">Zack Grossbart</a> author of <a href="http://www.jsondiff.com/">JSON Diff</a> along with the team behind <a href="http://www.jsonlint.com">JSONLint</a>.
+               </p>
+
+           </div>
+       </div>
+
+       <div class="initContainer">
+        <div class="left">
+            <p>Expected: TableInfo{ ........ , indices=[]} </p>
+            <textarea spellcheck="false" id="textarealeft" placeholder="Enter Expected output from Android Studio Logcat console. Start with TableInfo and end with indices=[]}"></textarea>
+            <pre id="errorLeft" class="error"></pre>
+            <span class="fileInput">or <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')"></span>
+        </div>
+
+        <div class="center">
+            <button id="compare" class="hidden">Compare</button>
+            <button id="processGo" onclick="performAction()" class="shown">Go.</button>
+            <div class="throbber-loader"></div>
+            <br/><br/><br/><br/>
+            or try some <a href="#" id="sample">sample data</a>
+
+        </div>
+
+        <div class="right">
+            <p>Found: TableInfo{ ........ , indices=[]}</p>
+
+            <textarea spellcheck="false" class="right" id="textarearight" placeholder="Enter Found output from Android Studio Logcat console. Start with TableInfo and end with indices=[]}"></textarea>
+            <pre id="errorRight" class="error"></pre>
+            <span class="fileInput">or <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'right')"></span>
+        </div>
+    </div>
+
+    <div class="diffcontainer">
+        <div id="report">
+        </div>
+        <pre id="out" class="left" class="codeBlock"></pre>
+        <pre id="out2" class="right" class="codeBlock"></pre>
+        <ul id="toolbar" class="toolbar"></ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function IsJsonString(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
+    function replace(string){
+        var res = replaceAll(string, "=", '":');
+
+        res = replaceAll(res,"TableInfo", '');
+        res = replaceAll(res,", ", ',');
+        res = replaceAll(res,",", ',"');
+        res = replaceAll(res,"{", '{"');
+        res = replaceAll(res,":Column{", ':{');
+        res = replaceAll(res,"'", '"');
+        res = replaceAll(res,"'", '"');
+
+        return res;
+    }
+
+    function performAction(){
+        var expected = document.getElementById("textarealeft").value;
+        var found = document.getElementById("textarearight").value;
+
+        if (!expected || !found){
+            return;
+        }
+        var res = replace(expected);
+
+        if (IsJsonString(res)){
+            document.getElementById("textarealeft").value = res;
+
+        }else{
+            document.getElementById("textarealeft").value = "Json Invalid\n" + res;
+        }
+
+
+        var res = replace(found);
+
+        if (IsJsonString(res)){
+            document.getElementById("textarearight").value = res;
+
+        }else{
+            document.getElementById("textarearight").value = "Json Invalid\n" + res;
+
+        }
+
+        document.getElementById("processGo").classList.remove("shown");
+        document.getElementById("processGo").classList.add("hidden");
+
+        document.getElementById("compare").classList.remove("hidden");
+        document.getElementById("compare").classList.add("shown");
+
+    }
+    $('#textarealeft').val("");
+    $('#textarearight').val("");
+</script>
+</body>
+</html>
