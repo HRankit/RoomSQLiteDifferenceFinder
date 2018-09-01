@@ -12,16 +12,7 @@
 
     <script src="jsl/jsl.format.js" type="text/javascript" charset="utf-8"></script>
     <script src="jsl/jsl.parser.js" type="text/javascript" charset="utf-8"></script>
-    <script src="jdd.js" type="text/javascript" charset="utf-8"></script>
-
-    <style type="text/css">
-        .hidden{
-            display: none
-        }
-        .shown {
-            display: block;
-        }
-    </style>
+    <script src="jdd.js" type="text/javascript" charset="utf-8"></script>   
 </head> 
 <body>
 
@@ -55,7 +46,7 @@
         </div>
 
         <div class="center">
-            <button id="compare" class="hidden">Compare</button>
+            <button id="compare">Compare</button>
             <button id="processGo" onclick="performAction()" class="shown">Go.</button>
             <div class="throbber-loader"></div>
             <br/><br/><br/><br/>
@@ -134,9 +125,7 @@
         document.getElementById("textarealeft").value = "Json Invalid\n Please paste from Expected TableInfo: till the ending curly braces of indices=[] }";
     }
 
-
     var res = replace(found);
-
     if (IsJsonString(res)){
         document.getElementById("textarearight").value = res;
         count = count + 1;        
@@ -145,16 +134,15 @@
     }
 
     if (count == 2){
-        document.getElementById("processGo").classList.remove("shown");
-        document.getElementById("processGo").classList.add("hidden");
-
-        document.getElementById("compare").classList.remove("hidden");
-        document.getElementById("compare").classList.add("shown");
+        $("#processGo").hide();
+        $("#compare").show();        
     }
     
 }
 $('#textarealeft').val("");
 $('#textarearight').val("");
+$("#compare").hide();
+
 
 
 </script>
