@@ -2,13 +2,13 @@
 <html lang="en"> 
 <head> 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-    <title>JSON Diff - The semantic JSON compare tool</title> 
+    <title>Room SQLite Difference Finder</title> 
 
     <link rel="stylesheet" href="reset.css" type="text/css" media="screen">
     <link rel="stylesheet" href="throbber.css" type="text/css" media="screen">
     <link rel="stylesheet" href="jdd.css" type="text/css" media="screen">
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="jsl/jsl.format.js" type="text/javascript" charset="utf-8"></script>
     <script src="jsl/jsl.parser.js" type="text/javascript" charset="utf-8"></script>
@@ -27,7 +27,7 @@
 
     <div id="main">
         <div class="header">
-            <h1>Room SQlite Difference Finder</h1>
+            <h1>Room SQLite Difference Finder</h1>
             <h3>Find difference when migrating from Sqlite to Room.</h3>
 
             <div class="weak">
@@ -51,7 +51,7 @@
             <p>Expected: TableInfo{ ........ , indices=[]} </p>
             <textarea spellcheck="false" id="textarealeft" placeholder="Enter Expected output from Android Studio Logcat console. Start with TableInfo and end with indices=[]}"></textarea>
             <pre id="errorLeft" class="error"></pre>
-            <span class="fileInput">or <input type="file" id="fileLeft" onchange="jdd.handleFiles(this.files, 'left')"></span>
+            
         </div>
 
         <div class="center">
@@ -68,7 +68,7 @@
 
             <textarea spellcheck="false" class="right" id="textarearight" placeholder="Enter Found output from Android Studio Logcat console. Start with TableInfo and end with indices=[]}"></textarea>
             <pre id="errorRight" class="error"></pre>
-            <span class="fileInput">or <input type="file" id="fileRight" onchange="jdd.handleFiles(this.files, 'right')"></span>
+            
         </div>
     </div>
 
@@ -107,42 +107,56 @@
         return res;
     }
 
-    function performAction(){
-        var expected = document.getElementById("textarealeft").value;
-        var found = document.getElementById("textarearight").value;
+    function showErrors(){
+     $('#errorLeft').text("Please Enter Expected Output from Android Logcat").show();
+     $('#textarealeft').addClass('error');
 
-        if (!expected || !found){
-            return;
-        }
-        var res = replace(expected);
+     $("errorRight").text("Please Enter Found Output from Android Logcat").show();
+     $('#textarearight').addClass('error');
 
-        if (IsJsonString(res)){
-            document.getElementById("textarealeft").value = res;
+ }
 
-        }else{
-            document.getElementById("textarealeft").value = "Json Invalid\n" + res;
-        }
+ function performAction(){
+    var expected = document.getElementById("textarealeft").value;
+    var found = document.getElementById("textarearight").value;
+
+    if (!expected || !found){
+        showErrors();
+        return;
+    }
+    var res = replace(expected);
+    var count = 0;
+
+    if (IsJsonString(res)){
+        document.getElementById("textarealeft").value = res;
+        count +=count;
+    }else{
+        document.getElementById("textarealeft").value = "Json Invalid\n Please paste from Expected TableInfo: till the ending curly braces of indices=[] }";
+    }
 
 
-        var res = replace(found);
+    var res = replace(found);
 
-        if (IsJsonString(res)){
-            document.getElementById("textarearight").value = res;
+    if (IsJsonString(res)){
+        document.getElementById("textarearight").value = res;
+        count +=count;        
+    }else{
+        document.getElementById("textarearight").value = "Json Invalid\nPlease paste from Expected TableInfo: till the ending curly braces of indices=[] }";
+    }
 
-        }else{
-            document.getElementById("textarearight").value = "Json Invalid\n" + res;
-
-        }
-
+    if (count == 2){
         document.getElementById("processGo").classList.remove("shown");
         document.getElementById("processGo").classList.add("hidden");
 
         document.getElementById("compare").classList.remove("hidden");
         document.getElementById("compare").classList.add("shown");
-
     }
-    $('#textarealeft').val("");
-    $('#textarearight').val("");
+    
+}
+$('#textarealeft').val("");
+$('#textarearight').val("");
+
+
 </script>
 </body>
 </html>
